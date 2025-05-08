@@ -29,6 +29,8 @@ public class UpdatePostRequestDto {
     @NotBlank(message = "Content is required")
     @Size(max = 10000, message = "Content must be less than 10000 characters")
     private String content;
+    @NotNull(message = "Category ID is required")
+    private UUID categoryId;
     @Builder.Default
     @Size(min = 1, message = "At least one tag is required")
     private Set<UUID> tagIds = new HashSet<>();

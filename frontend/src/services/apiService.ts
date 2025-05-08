@@ -72,7 +72,7 @@ class ApiService {
 
   private constructor() {
     this.api = axios.create({
-      baseURL: 'http://localhost:8080/api/v1',
+      baseURL: '/api/v1',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -125,7 +125,6 @@ class ApiService {
   // Auth endpoints
   public async login(credentials: LoginRequest): Promise<AuthResponse> {
     const response: AxiosResponse<AuthResponse> = await this.api.post('/auth/login', credentials);
-    console.log(response)
     localStorage.setItem('token', response.data.token);
     return response.data;
   }

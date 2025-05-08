@@ -74,9 +74,13 @@ public class PostController {
     public ResponseEntity<PostDto> updatePost(
         @PathVariable UUID id, 
         @Valid @RequestBody UpdatePostRequestDto updatePostRequestDto) {
+        System.out.println("Update post request: ");
         UpdatePostRequest updatePostRequest = postMapper.toUpdatePostRequest(updatePostRequestDto);
+        System.out.println("Update post request1: "+updatePostRequest.getId());
         Post updatedPost = postService.updatePost(id, updatePostRequest);
+        System.out.println("Update post request3: ");
         PostDto postDto = postMapper.toDto(updatedPost);
+        System.out.println("Update post request4: ");
         return ResponseEntity.ok(postDto);
         
     }
@@ -88,6 +92,7 @@ public class PostController {
     }
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable UUID id) {
+
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }

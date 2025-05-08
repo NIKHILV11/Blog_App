@@ -10,8 +10,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.blog.blog.domain.dto.LoginRequest;
+import com.blog.blog.domain.entities.User;
+import com.blog.blog.repositories.UserRepository;
 // import com.blog.blog.domain.entities.User;
 import com.blog.blog.services.AuthenticationService;
 
@@ -26,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -70,5 +76,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .getBody();
         
             return claims.getSubject();}
+     @Override
+public UserDetails registerUser(LoginRequest loginRequest) {
+    if (userRepository.findByEmail(loginRequest.getEmail()).isPresent()) {
+        throw new RuntimeException("Invalid password");
+    }
+
+    User newUser = User.builder()
+            .name("New User") // or make LoginRequest include name field
+            .email(loginRequest.getEmail())
+            .password(passwordEncoder.encode(loginRequest.getPassword()))
+            .build();
+
+    userRepository.save(newUser);
+    return userDetailsService.loadUserByUsername(newUser.getEmail());
+    }
 
 }

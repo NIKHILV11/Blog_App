@@ -85,19 +85,24 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public Post updatePost(UUID id, UpdatePostRequest updatePostRequest) {
+        System.out.println("Update post request22: "+id);
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Post not found with id: " + id));
+        System.out.println("Update post request44: "+post);
         post.setTitle(updatePostRequest.getTitle());
         post.setContent(updatePostRequest.getContent());
         post.setStatus(updatePostRequest.getStatus());
         post.setReadingTime(calculateReadingTime(updatePostRequest.getContent()));
-        
-        Category category = categoryService.getCategoryById(updatePostRequest.getCategoryId());
+        System.out.println("Update post request66: ");
+        UUID updatePostRequestCategoryId = updatePostRequest.getCategoryId();
+        System.out.println("Update post request77: "+updatePostRequestCategoryId);
+        Category category = categoryService.getCategoryById(updatePostRequestCategoryId);
         post.setCategory(category);
-
+        System.out.println("Update post request77: ");
         Set<UUID> tagIds = updatePostRequest.getTagIds();
         List<Tag> tags = tagService.getTagsByIds(tagIds);
-        post.setTags(new HashSet<>(tags)); // Convert Set to List and assign to post.tags);
+        post.setTags(new HashSet<>(tags)); 
+        System.out.println("Update post request55: ");// Convert Set to List and assign to post.tags);
         return postRepository.save(post);
         
     }

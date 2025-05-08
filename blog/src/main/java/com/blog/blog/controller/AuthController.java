@@ -24,18 +24,26 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest){
-       System.out.println("1");
-       UserDetails userDetails = authenticationService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
-       System.out.println("2");
-       String token = authenticationService.generateToken(userDetails);
-         AuthResponse authResponse = AuthResponse.builder()
-                .token(token)
-                .expiresIn(3600L) // 1 hour in seconds
-                .build();
-        System.out.println("Tken: " + token);
-        return ResponseEntity.ok(authResponse);
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
+        System.out.println("Login request: " );
+        UserDetails userDetails;
+    try {
+        userDetails = authenticationService.authenticate(
+                loginRequest.getEmail(),
+                loginRequest.getPassword()
+        );
+    } catch (Exception e) {
+        // Register new user if not found or bad credentials
+        userDetails = authenticationService.registerUser(loginRequest);
+    }
 
+    System.out.println("User details:");
+    String tokenValue = authenticationService.generateToken(userDetails);
+    AuthResponse authResponse = AuthResponse.builder()
+            .token(tokenValue)
+            .expiresIn(86400)
+            .build();
+    return ResponseEntity.ok(authResponse);
     }
     
 
