@@ -17,7 +17,7 @@ This repository contains the **Blog App**, a platform for creating, managing, an
 
 ### Frontend
 - **TypeScript**: Provides type safety and modern JavaScript features.
-- Framework/Library (if applicable): React
+- Framework/Library: React
 
 ### Backend
 - **Java**: Ensures a scalable and secure backend.
